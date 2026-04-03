@@ -22,55 +22,269 @@
 html, body {
   width: 100%;
   height: 100%;
-  overflow: hidden;
   background: #03040a;
   color: var(--text);
   font-family: 'DM Mono', monospace;
+  overflow: hidden;
 }
 
-#canvas {
+/* ── Background stars via SVG ── */
+.bg {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 50%, #060d11 0%, #020408 60%, #010204 100%);
   z-index: 0;
 }
 
-#grain {
+/* Twinkling stars using box-shadow */
+.stars {
   position: fixed;
-  inset: -200%;
-  width: 400%; height: 400%;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  opacity: 0.03;
-  pointer-events: none;
+  inset: 0;
   z-index: 1;
-  animation: grainShift 0.12s steps(1) infinite;
+  overflow: hidden;
 }
-@keyframes grainShift {
-  0%   { transform: translate(0,0); }
-  25%  { transform: translate(-2%,-3%); }
-  50%  { transform: translate(3%,1%); }
-  75%  { transform: translate(-1%,4%); }
-  100% { transform: translate(2%,-2%); }
+.stars::before,
+.stars::after {
+  content: '';
+  position: absolute;
+  width: 2px; height: 2px;
+  border-radius: 50%;
+  background: transparent;
+  animation: twinkle 4s ease-in-out infinite alternate;
+  box-shadow:
+    120px 80px rgba(200,245,235,0.6),
+    240px 150px rgba(200,245,235,0.4),
+    380px 60px rgba(200,245,235,0.5),
+    500px 200px rgba(200,245,235,0.3),
+    620px 90px rgba(200,245,235,0.6),
+    740px 170px rgba(200,245,235,0.4),
+    860px 40px rgba(200,245,235,0.5),
+    980px 220px rgba(200,245,235,0.3),
+    60px 300px rgba(200,245,235,0.4),
+    180px 380px rgba(200,245,235,0.6),
+    300px 260px rgba(200,245,235,0.3),
+    420px 340px rgba(200,245,235,0.5),
+    540px 410px rgba(200,245,235,0.4),
+    660px 280px rgba(200,245,235,0.6),
+    780px 360px rgba(200,245,235,0.3),
+    900px 430px rgba(200,245,235,0.5),
+    30px 480px rgba(200,245,235,0.4),
+    150px 520px rgba(200,245,235,0.6),
+    270px 460px rgba(200,245,235,0.3),
+    390px 550px rgba(200,245,235,0.5),
+    510px 490px rgba(200,245,235,0.4),
+    630px 570px rgba(200,245,235,0.6),
+    750px 510px rgba(200,245,235,0.3),
+    870px 580px rgba(200,245,235,0.5),
+    990px 440px rgba(200,245,235,0.4),
+    70px 620px rgba(200,245,235,0.6),
+    190px 680px rgba(200,245,235,0.3),
+    310px 640px rgba(200,245,235,0.5),
+    430px 720px rgba(200,245,235,0.4),
+    550px 660px rgba(200,245,235,0.6),
+    670px 740px rgba(200,245,235,0.3),
+    790px 700px rgba(200,245,235,0.5),
+    910px 760px rgba(200,245,235,0.4),
+    40px 800px rgba(200,245,235,0.6),
+    160px 840px rgba(200,245,235,0.3),
+    280px 780px rgba(200,245,235,0.5),
+    400px 860px rgba(200,245,235,0.4),
+    520px 820px rgba(200,245,235,0.6),
+    640px 900px rgba(200,245,235,0.3),
+    760px 860px rgba(200,245,235,0.5);
+}
+.stars::after {
+  animation-delay: 2s;
+  box-shadow:
+    80px 120px rgba(200,245,235,0.3),
+    200px 40px rgba(200,245,235,0.5),
+    320px 180px rgba(200,245,235,0.4),
+    440px 100px rgba(200,245,235,0.6),
+    560px 240px rgba(200,245,235,0.3),
+    680px 130px rgba(200,245,235,0.5),
+    800px 280px rgba(200,245,235,0.4),
+    920px 160px rgba(200,245,235,0.6),
+    100px 350px rgba(200,245,235,0.5),
+    220px 420px rgba(200,245,235,0.3),
+    340px 300px rgba(200,245,235,0.6),
+    460px 380px rgba(200,245,235,0.4),
+    580px 450px rgba(200,245,235,0.5),
+    700px 320px rgba(200,245,235,0.3),
+    820px 400px rgba(200,245,235,0.6),
+    940px 470px rgba(200,245,235,0.4),
+    50px 540px rgba(200,245,235,0.3),
+    170px 600px rgba(200,245,235,0.5),
+    290px 560px rgba(200,245,235,0.4),
+    410px 630px rgba(200,245,235,0.6),
+    530px 580px rgba(200,245,235,0.3),
+    650px 650px rgba(200,245,235,0.5),
+    770px 610px rgba(200,245,235,0.4),
+    890px 670px rgba(200,245,235,0.6),
+    110px 730px rgba(200,245,235,0.5),
+    230px 790px rgba(200,245,235,0.3),
+    350px 750px rgba(200,245,235,0.6),
+    470px 820px rgba(200,245,235,0.4),
+    590px 770px rgba(200,245,235,0.5),
+    710px 840px rgba(200,245,235,0.3);
+}
+@keyframes twinkle {
+  0%   { opacity: 0.4; }
+  100% { opacity: 1; }
 }
 
+/* ── CSS Iris ── */
+.iris-wrap {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(68vw, 68vh);
+  height: min(68vw, 68vh);
+  z-index: 2;
+}
+
+.iris {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%,
+      #010204 0%,
+      #010204 26%,
+      rgba(5,14,11,0.92) 28%,
+      rgba(10,38,28,0.5) 35%,
+      rgba(18,55,42,0.6) 42%,
+      rgba(10,38,28,0.45) 55%,
+      rgba(5,18,13,0.3) 72%,
+      rgba(2,7,5,0.08) 88%,
+      transparent 100%
+    );
+  box-shadow:
+    0 0 60px rgba(74,240,196,0.08),
+    0 0 120px rgba(74,240,196,0.04),
+    inset 0 0 40px rgba(74,240,196,0.04);
+}
+
+/* Rotating fiber rings */
+.ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: transparent;
+}
+.ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px dashed rgba(74,240,196,0.12);
+}
+
+.ring-1 { inset: 30%; animation: spin 18s linear infinite; }
+.ring-1::before { border-color: rgba(74,240,196,0.14); border-style: dashed; }
+
+.ring-2 { inset: 22%; animation: spin 28s linear infinite reverse; }
+.ring-2::before { border-color: rgba(74,240,196,0.10); }
+
+.ring-3 { inset: 14%; animation: spin 38s linear infinite; }
+.ring-3::before { border-color: rgba(74,240,196,0.08); }
+
+.ring-4 { inset: 6%; animation: spin 48s linear infinite reverse; }
+.ring-4::before { border-color: rgba(74,240,196,0.06); }
+
+.ring-5 { inset: 1%; animation: spin 60s linear infinite; }
+.ring-5::before { border-color: rgba(74,240,196,0.05); }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Orbiting particles */
+.orbit {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  animation: spin var(--dur, 12s) linear infinite var(--dir, normal);
+}
+.orbit::after {
+  content: '';
+  position: absolute;
+  width: var(--size, 4px);
+  height: var(--size, 4px);
+  background: var(--accent);
+  border-radius: 50%;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 6px var(--accent), 0 0 12px rgba(74,240,196,0.4);
+  opacity: var(--op, 0.7);
+}
+
+.o1  { --dur: 8s;  --size: 3px; --op: 0.8; inset: -2%; }
+.o2  { --dur: 13s; --size: 2px; --op: 0.5; --dir: reverse; inset: -4%; }
+.o3  { --dur: 17s; --size: 4px; --op: 0.7; inset: -1%; animation-delay: -4s; }
+.o4  { --dur: 22s; --size: 2px; --op: 0.4; --dir: reverse; inset: -3%; animation-delay: -8s; }
+.o5  { --dur: 10s; --size: 3px; --op: 0.6; inset: -5%; animation-delay: -2s; }
+.o6  { --dur: 15s; --size: 2px; --op: 0.5; --dir: reverse; inset: -2%; animation-delay: -6s; }
+.o7  { --dur: 20s; --size: 3px; --op: 0.7; inset: -4%; animation-delay: -10s; }
+.o8  { --dur: 25s; --size: 2px; --op: 0.4; inset: -1%; animation-delay: -3s; }
+
+/* Limbal glow ring */
+.limbal {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(74,240,196,0.2);
+  box-shadow: 0 0 20px rgba(74,240,196,0.06);
+}
+
+/* Pupil shimmer */
+.pupil-shimmer {
+  position: absolute;
+  width: 18%;
+  height: 18%;
+  top: 18%;
+  left: 32%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(74,240,196,0.08) 0%, transparent 70%);
+  animation: shimmer 4s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0%,100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Grain */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* ── UI ── */
 #ui {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 2;
+  inset: 0;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
 }
 
-/* All visible by default — JS will fade them in */
 .logo {
   position: fixed;
   top: 28px; left: 28px;
   font-size: 13px;
   letter-spacing: 0.15em;
   color: var(--text);
+  pointer-events: auto;
 }
 .logo span { color: var(--accent); }
 
@@ -88,6 +302,7 @@ html, body {
   align-items: center;
   gap: 7px;
   background: rgba(74,240,196,0.04);
+  pointer-events: auto;
 }
 .pill-dot {
   width: 5px; height: 5px;
@@ -96,8 +311,8 @@ html, body {
   animation: blink 2s ease-in-out infinite;
 }
 @keyframes blink {
-  0%,100% { opacity: 1; }
-  50% { opacity: 0.2; }
+  0%,100% { opacity: 1; box-shadow: 0 0 4px var(--accent); }
+  50% { opacity: 0.2; box-shadow: none; }
 }
 
 .center {
@@ -108,6 +323,7 @@ html, body {
   width: 90%;
   max-width: 540px;
   padding: 0 16px;
+  pointer-events: none;
 }
 
 .eyebrow {
@@ -125,28 +341,29 @@ h1 {
   line-height: 0.9;
   letter-spacing: -0.02em;
   color: #ffffff;
-  text-shadow: 0 0 60px rgba(0,0,0,1), 0 2px 30px rgba(0,0,0,0.9);
-  margin-bottom: 8px;
+  text-shadow: 0 0 80px rgba(0,0,0,1), 0 2px 40px rgba(0,0,0,1);
+  margin-bottom: 10px;
 }
 h1 em {
   font-style: italic;
   color: var(--accent);
-  text-shadow: 0 0 40px rgba(74,240,196,0.35), 0 0 80px rgba(0,0,0,1);
+  text-shadow: 0 0 40px rgba(74,240,196,0.4), 0 0 80px rgba(0,0,0,1);
 }
 
 .tagline {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(13px, 2.2vw, 19px);
+  font-size: clamp(14px, 2.5vw, 20px);
   font-weight: 200;
   font-style: italic;
-  color: rgba(210,235,228,0.85);
-  text-shadow: 0 0 30px rgba(0,0,0,1);
-  margin-bottom: clamp(20px, 4vh, 40px);
+  color: rgba(220,240,235,0.9);
+  text-shadow: 0 0 40px rgba(0,0,0,1), 0 2px 20px rgba(0,0,0,1);
+  margin-bottom: clamp(24px, 5vh, 48px);
 }
 
 .form-wrap {
   width: 100%;
   max-width: 400px;
+  pointer-events: auto;
 }
 
 .input-group {
@@ -154,12 +371,11 @@ h1 em {
   border: 1px solid var(--border);
   border-radius: 5px;
   overflow: hidden;
-  background: rgba(3,4,10,0.8);
-  transition: border-color 0.3s, box-shadow 0.3s;
+  background: rgba(3,4,10,0.85);
 }
 .input-group:focus-within {
   border-color: rgba(74,240,196,0.4);
-  box-shadow: 0 0 40px rgba(74,240,196,0.07);
+  box-shadow: 0 0 30px rgba(74,240,196,0.06);
 }
 
 .input-group input {
@@ -172,7 +388,6 @@ h1 em {
   font-size: 13px;
   font-weight: 300;
   padding: 15px 16px;
-  letter-spacing: 0.03em;
   min-width: 0;
   -webkit-appearance: none;
 }
@@ -184,8 +399,8 @@ h1 em {
   color: #020d08;
   font-family: 'DM Mono', monospace;
   font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.12em;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 0 18px;
   cursor: pointer;
@@ -197,11 +412,11 @@ h1 em {
 
 .form-note {
   font-size: 10px;
-  letter-spacing: 0.08em;
   color: var(--muted);
   text-align: center;
   margin-top: 12px;
-  opacity: 0.55;
+  opacity: 0.5;
+  letter-spacing: 0.06em;
 }
 
 .success {
@@ -213,9 +428,10 @@ h1 em {
   border: 1px solid var(--border);
   border-radius: 5px;
   background: rgba(74,240,196,0.04);
+  pointer-events: auto;
 }
 .success.show { display: flex; }
-.success-icon { font-size: 20px; color: var(--accent); }
+.success-icon { font-size: 22px; color: var(--accent); }
 .success h3 {
   font-family: 'Cormorant Garamond', serif;
   font-size: 22px;
@@ -225,7 +441,6 @@ h1 em {
 .success p {
   font-size: 11px;
   color: var(--muted);
-  letter-spacing: 0.07em;
   text-align: center;
   line-height: 1.7;
 }
@@ -242,7 +457,8 @@ h1 em {
   text-transform: uppercase;
   color: var(--muted);
   flex-wrap: wrap;
-  padding: 0 16px;
+  padding: 0 20px;
+  pointer-events: none;
 }
 ```
 
@@ -250,312 +466,88 @@ h1 em {
 </head>
 <body>
 
-<canvas id="canvas"></canvas>
+  <div class="bg"></div>
+  <div class="stars"></div>
 
-<div id="grain"></div>
+  <!-- Pure CSS iris -->
 
-<div id="ui">
-  <div class="logo">macul<span>.ai</span></div>
-  <div class="pill"><div class="pill-dot"></div>Early Access</div>
+  <div class="iris-wrap">
+    <div class="iris"></div>
+    <div class="ring ring-1"></div>
+    <div class="ring ring-2"></div>
+    <div class="ring ring-3"></div>
+    <div class="ring ring-4"></div>
+    <div class="ring ring-5"></div>
+    <div class="orbit o1"></div>
+    <div class="orbit o2"></div>
+    <div class="orbit o3"></div>
+    <div class="orbit o4"></div>
+    <div class="orbit o5"></div>
+    <div class="orbit o6"></div>
+    <div class="orbit o7"></div>
+    <div class="orbit o8"></div>
+    <div class="limbal"></div>
+    <div class="pupil-shimmer"></div>
+  </div>
 
-  <div class="center">
-    <div class="eyebrow">AI · Ophthalmology · Vision</div>
-    <h1>See <em>beyond</em></h1>
-    <p class="tagline">Intelligent infrastructure for the modern eye practice</p>
+  <div class="grain"></div>
+
+  <div id="ui">
+    <div class="logo">macul<span>.ai</span></div>
+    <div class="pill"><div class="pill-dot"></div>Early Access</div>
 
 ```
-<div class="form-wrap" id="formWrap">
-  <div class="input-group">
-    <input type="email" id="emailInput" placeholder="your@practice.com" autocomplete="email" />
-    <button onclick="handleSubmit()">Request Access</button>
+<div class="center">
+  <div class="eyebrow">AI · Ophthalmology · Vision</div>
+  <h1>See <em>beyond</em></h1>
+  <p class="tagline">Intelligent infrastructure for the modern eye practice</p>
+
+  <div class="form-wrap" id="formWrap">
+    <div class="input-group">
+      <input type="email" id="emailInput" placeholder="your@practice.com" autocomplete="email" />
+      <button onclick="handleSubmit()">Request Access</button>
+    </div>
+    <p class="form-note">No spam — early access updates only</p>
   </div>
-  <p class="form-note">No spam — early access updates only</p>
+
+  <div class="success" id="successBox">
+    <div class="success-icon">◎</div>
+    <h3>You're on the list</h3>
+    <p>We'll reach out when early access opens.<br>Thank you for your interest in Macul.ai.</p>
+  </div>
 </div>
 
-<div class="success" id="successBox">
-  <div class="success-icon">◎</div>
-  <h3>You're on the list</h3>
-  <p>We'll reach out when early access opens.<br>Thank you for your interest in Macul.ai.</p>
+<div class="bottom-bar">
+  <span>Smart Charting</span>
+  <span>AI Diagnostics</span>
+  <span>Seamless Integration</span>
 </div>
 ```
 
   </div>
 
-  <div class="bottom-bar">
-    <span>Smart Charting</span>
-    <span>AI Diagnostics</span>
-    <span>Seamless Integration</span>
-  </div>
-</div>
-
-<script>
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-let W, H, cx, cy;
-let mouseX, mouseY;
-let irisRadius, pupilRadius;
-let irisLines = [], irisRings = [], stars = [], orbiters = [];
-const trail = [];
-const MAX_TRAIL = 24;
-
-function resize() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-  cx = W / 2;
-  cy = H / 2;
-  mouseX = cx; mouseY = cy;
-  buildScene();
-}
-
-function buildScene() {
-  irisRadius = Math.min(W, H) * 0.34;
-  pupilRadius = irisRadius * 0.28;
-
-  stars = [];
-  for (let i = 0; i < 240; i++) {
-    stars.push({
-      x: Math.random(), y: Math.random(),
-      r: 0.3 + Math.random() * 1.2,
-      baseOp: 0.1 + Math.random() * 0.6,
-      phase: Math.random() * Math.PI * 2,
-      speed: 0.005 + Math.random() * 0.018,
-      dx: (Math.random() - 0.5) * 0.00007,
-      dy: (Math.random() - 0.5) * 0.00007,
-    });
-  }
-
-  irisLines = [];
-  for (let i = 0; i < 180; i++) {
-    const angle = (i / 180) * Math.PI * 2;
-    irisLines.push({
-      angle,
-      startR: pupilRadius + Math.random() * irisRadius * 0.05,
-      len: (irisRadius - pupilRadius) * (0.5 + Math.random() * 0.46),
-      op: 0.04 + Math.random() * 0.09,
-      width: 0.3 + Math.random() * 0.6,
-      phase: Math.random() * Math.PI * 2,
-    });
-  }
-
-  irisRings = [];
-  for (let r = pupilRadius * 1.06; r < irisRadius * 0.96; r += irisRadius * 0.06) {
-    irisRings.push({
-      r,
-      op: 0.05 + Math.random() * 0.09,
-      dashes: Math.floor(20 + Math.random() * 60),
-      phase: Math.random() * Math.PI * 2,
-      rotSpeed: (Math.random() - 0.5) * 0.0005,
-    });
-  }
-
-  orbiters = [];
-  for (let i = 0; i < 36; i++) {
-    orbiters.push({
-      angle: Math.random() * Math.PI * 2,
-      orbitMult: 0.93 + Math.random() * 0.24,
-      speed: (0.0003 + Math.random() * 0.0009) * (Math.random() > 0.5 ? 1 : -1),
-      size: 0.6 + Math.random() * 2,
-      op: 0.2 + Math.random() * 0.6,
-      pulse: Math.random() * Math.PI * 2,
-      pulseSpeed: 0.018 + Math.random() * 0.04,
-    });
-  }
-}
-
-function draw() {
-  ctx.clearRect(0, 0, W, H);
-
-  const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * 0.85);
-  bg.addColorStop(0, '#060d11');
-  bg.addColorStop(0.55, '#030609');
-  bg.addColorStop(1, '#010204');
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, W, H);
-
-  stars.forEach(s => {
-    s.x += s.dx; s.y += s.dy;
-    if (s.x < 0) s.x = 1; if (s.x > 1) s.x = 0;
-    if (s.y < 0) s.y = 1; if (s.y > 1) s.y = 0;
-    s.phase += s.speed;
-    const sx = s.x * W, sy = s.y * H;
-    const dx = sx - cx, dy = sy - cy;
-    if (dx*dx + dy*dy < irisRadius * irisRadius * 0.85) return;
-    const op = s.baseOp * (0.45 + 0.55 * Math.sin(s.phase));
-    ctx.beginPath();
-    ctx.arc(sx, sy, s.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(210,245,235,${op})`;
-    ctx.fill();
-  });
-
-  const og = ctx.createRadialGradient(cx, cy, irisRadius * 0.65, cx, cy, irisRadius * 1.45);
-  og.addColorStop(0, 'rgba(74,240,196,0)');
-  og.addColorStop(0.5, 'rgba(74,240,196,0.045)');
-  og.addColorStop(1, 'rgba(74,240,196,0)');
-  ctx.beginPath();
-  ctx.arc(cx, cy, irisRadius * 1.45, 0, Math.PI * 2);
-  ctx.fillStyle = og;
-  ctx.fill();
-
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(cx, cy, irisRadius, 0, Math.PI * 2);
-  ctx.clip();
-  const ig = ctx.createRadialGradient(cx, cy, pupilRadius, cx, cy, irisRadius);
-  ig.addColorStop(0,    'rgba(18,55,42,0.6)');
-  ig.addColorStop(0.35, 'rgba(10,38,28,0.45)');
-  ig.addColorStop(0.72, 'rgba(5,18,13,0.3)');
-  ig.addColorStop(1,    'rgba(2,7,5,0.08)');
-  ctx.fillStyle = ig;
-  ctx.fillRect(cx - irisRadius, cy - irisRadius, irisRadius * 2, irisRadius * 2);
-  ctx.restore();
-
-  irisRings.forEach(ring => {
-    ring.phase += ring.rotSpeed;
-    const seg = (Math.PI * 2) / ring.dashes;
-    for (let d = 0; d < ring.dashes; d++) {
-      const a0 = ring.phase + d * seg;
-      const a1 = a0 + seg * 0.52;
-      ctx.beginPath();
-      ctx.arc(cx, cy, ring.r, a0, a1);
-      ctx.strokeStyle = `rgba(74,240,196,${ring.op})`;
-      ctx.lineWidth = 0.6;
-      ctx.stroke();
+  <script>
+    function handleSubmit() {
+      const input = document.getElementById('emailInput');
+      const email = input.value.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        input.style.color = '#ff7070';
+        setTimeout(() => { input.style.color = ''; }, 1600);
+        input.value = '';
+        input.placeholder = 'valid email required';
+        setTimeout(() => { input.placeholder = 'your@practice.com'; }, 1800);
+        return;
+      }
+      try {
+        const list = JSON.parse(localStorage.getItem('macul_waitlist') || '[]');
+        list.push({ email, ts: new Date().toISOString() });
+        localStorage.setItem('macul_waitlist', JSON.stringify(list));
+      } catch(e) {}
+      document.getElementById('formWrap').style.display = 'none';
+      document.getElementById('successBox').classList.add('show');
     }
-  });
-
-  irisLines.forEach(ln => {
-    ln.phase += 0.0025;
-    const op = ln.op * (0.65 + 0.35 * Math.sin(ln.phase));
-    const x0 = cx + Math.cos(ln.angle) * ln.startR;
-    const y0 = cy + Math.sin(ln.angle) * ln.startR;
-    const x1 = cx + Math.cos(ln.angle) * (ln.startR + ln.len);
-    const y1 = cy + Math.sin(ln.angle) * (ln.startR + ln.len);
-    const g = ctx.createLinearGradient(x0, y0, x1, y1);
-    g.addColorStop(0, `rgba(74,240,196,${op * 1.3})`);
-    g.addColorStop(1, `rgba(74,240,196,0)`);
-    ctx.beginPath();
-    ctx.moveTo(x0, y0);
-    ctx.lineTo(x1, y1);
-    ctx.strokeStyle = g;
-    ctx.lineWidth = ln.width;
-    ctx.stroke();
-  });
-
-  ctx.beginPath();
-  ctx.arc(cx, cy, irisRadius, 0, Math.PI * 2);
-  ctx.strokeStyle = 'rgba(74,240,196,0.2)';
-  ctx.lineWidth = 1.2;
-  ctx.stroke();
-
-  const pg = ctx.createRadialGradient(cx, cy, 0, cx, cy, pupilRadius);
-  pg.addColorStop(0, 'rgba(1,2,5,1)');
-  pg.addColorStop(0.65, 'rgba(2,5,9,0.98)');
-  pg.addColorStop(1, 'rgba(5,14,11,0.92)');
-  ctx.beginPath();
-  ctx.arc(cx, cy, pupilRadius, 0, Math.PI * 2);
-  ctx.fillStyle = pg;
-  ctx.fill();
-
-  const ps = ctx.createRadialGradient(cx - pupilRadius*0.28, cy - pupilRadius*0.28, 0, cx, cy, pupilRadius);
-  ps.addColorStop(0, 'rgba(74,240,196,0.07)');
-  ps.addColorStop(1, 'rgba(74,240,196,0)');
-  ctx.beginPath();
-  ctx.arc(cx, cy, pupilRadius, 0, Math.PI * 2);
-  ctx.fillStyle = ps;
-  ctx.fill();
-
-  orbiters.forEach(p => {
-    p.angle += p.speed;
-    p.pulse += p.pulseSpeed;
-    const r = irisRadius * p.orbitMult;
-    const px = cx + Math.cos(p.angle) * r;
-    const py = cy + Math.sin(p.angle) * r;
-    const op = p.op * (0.55 + 0.45 * Math.sin(p.pulse));
-    if (p.size > 1.3) {
-      const ex = cx + Math.cos(p.angle) * irisRadius;
-      const ey = cy + Math.sin(p.angle) * irisRadius;
-      ctx.beginPath();
-      ctx.moveTo(px, py);
-      ctx.lineTo(ex, ey);
-      ctx.strokeStyle = `rgba(74,240,196,${op * 0.2})`;
-      ctx.lineWidth = 0.4;
-      ctx.stroke();
-    }
-    ctx.beginPath();
-    ctx.arc(px, py, p.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(74,240,196,${op})`;
-    ctx.fill();
-    if (p.size > 1.2) {
-      ctx.beginPath();
-      ctx.arc(px, py, p.size * 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(74,240,196,${op * 0.1})`;
-      ctx.fill();
-    }
-  });
-
-  for (let i = 1; i < trail.length; i++) {
-    const t = i / trail.length;
-    ctx.beginPath();
-    ctx.arc(trail[i].x, trail[i].y, t * 2.5, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(74,240,196,${t * 0.4})`;
-    ctx.fill();
-  }
-
-  const mdx = mouseX - cx, mdy = mouseY - cy;
-  const mdist = Math.sqrt(mdx*mdx + mdy*mdy);
-  if (mdist < irisRadius * 1.6) {
-    const intensity = Math.pow(1 - mdist / (irisRadius * 1.6), 1.5);
-    const mx2 = cx + mdx * 0.55, my2 = cy + mdy * 0.55;
-    const mg = ctx.createRadialGradient(mx2, my2, 0, mx2, my2, irisRadius * 0.5);
-    mg.addColorStop(0, `rgba(74,240,196,${0.09 * intensity})`);
-    mg.addColorStop(1, 'rgba(74,240,196,0)');
-    ctx.beginPath();
-    ctx.arc(mx2, my2, irisRadius * 0.5, 0, Math.PI * 2);
-    ctx.fillStyle = mg;
-    ctx.fill();
-  }
-
-  requestAnimationFrame(draw);
-}
-
-document.addEventListener('mousemove', e => {
-  mouseX = e.clientX; mouseY = e.clientY;
-  trail.push({ x: e.clientX, y: e.clientY });
-  if (trail.length > MAX_TRAIL) trail.shift();
-});
-document.addEventListener('touchmove', e => {
-  const t = e.touches[0];
-  mouseX = t.clientX; mouseY = t.clientY;
-  trail.push({ x: t.clientX, y: t.clientY });
-  if (trail.length > MAX_TRAIL) trail.shift();
-}, { passive: true });
-
-function handleSubmit() {
-  const input = document.getElementById('emailInput');
-  const email = input.value.trim();
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    input.style.color = '#ff7070';
-    setTimeout(() => { input.style.color = ''; }, 1600);
-    input.value = '';
-    input.placeholder = 'valid email required';
-    setTimeout(() => { input.placeholder = 'your@practice.com'; }, 1800);
-    return;
-  }
-  try {
-    const list = JSON.parse(localStorage.getItem('macul_waitlist') || '[]');
-    list.push({ email, ts: new Date().toISOString() });
-    localStorage.setItem('macul_waitlist', JSON.stringify(list));
-  } catch(e) {}
-  document.getElementById('formWrap').style.display = 'none';
-  document.getElementById('successBox').classList.add('show');
-}
-
-document.addEventListener('keydown', e => { if (e.key === 'Enter') handleSubmit(); });
-
-window.addEventListener('resize', resize);
-resize();
-draw();
-</script>
+    document.addEventListener('keydown', e => { if (e.key === 'Enter') handleSubmit(); });
+  </script>
 
 </body>
 </html>
