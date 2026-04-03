@@ -20,8 +20,8 @@
 }
 
 html, body {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   background: #03040a;
   color: var(--text);
@@ -31,8 +31,7 @@ html, body {
 #canvas {
   position: fixed;
   top: 0; left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   z-index: 0;
 }
 
@@ -57,8 +56,7 @@ html, body {
 #ui {
   position: fixed;
   top: 0; left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%; height: 100%;
   z-index: 2;
   display: flex;
   flex-direction: column;
@@ -66,14 +64,13 @@ html, body {
   justify-content: center;
 }
 
+/* All visible by default — JS will fade them in */
 .logo {
   position: fixed;
   top: 28px; left: 28px;
   font-size: 13px;
   letter-spacing: 0.15em;
   color: var(--text);
-  opacity: 0;
-  animation: fadeIn 1s ease 1.2s forwards;
 }
 .logo span { color: var(--accent); }
 
@@ -87,8 +84,6 @@ html, body {
   border: 1px solid var(--border);
   padding: 7px 14px;
   border-radius: 100px;
-  opacity: 0;
-  animation: fadeIn 1s ease 1.2s forwards;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -110,7 +105,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  width: 90vw;
+  width: 90%;
   max-width: 540px;
   padding: 0 16px;
 }
@@ -120,8 +115,6 @@ html, body {
   letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--accent);
-  opacity: 0;
-  animation: fadeUp 0.9s ease 0.9s forwards;
   margin-bottom: 14px;
 }
 
@@ -133,8 +126,6 @@ h1 {
   letter-spacing: -0.02em;
   color: #ffffff;
   text-shadow: 0 0 60px rgba(0,0,0,1), 0 2px 30px rgba(0,0,0,0.9);
-  opacity: 0;
-  animation: fadeUp 1s ease 1s forwards;
   margin-bottom: 8px;
 }
 h1 em {
@@ -150,16 +141,12 @@ h1 em {
   font-style: italic;
   color: rgba(210,235,228,0.85);
   text-shadow: 0 0 30px rgba(0,0,0,1);
-  opacity: 0;
-  animation: fadeUp 1s ease 1.15s forwards;
   margin-bottom: clamp(20px, 4vh, 40px);
 }
 
 .form-wrap {
   width: 100%;
   max-width: 400px;
-  opacity: 0;
-  animation: fadeUp 1s ease 1.3s forwards;
 }
 
 .input-group {
@@ -202,7 +189,6 @@ h1 em {
   text-transform: uppercase;
   padding: 0 18px;
   cursor: pointer;
-  transition: background 0.2s;
   white-space: nowrap;
   flex-shrink: 0;
   -webkit-appearance: none;
@@ -255,19 +241,8 @@ h1 em {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
-  opacity: 0;
-  animation: fadeIn 1s ease 1.9s forwards;
   flex-wrap: wrap;
   padding: 0 16px;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
 }
 ```
 
@@ -323,20 +298,12 @@ let irisLines = [], irisRings = [], stars = [], orbiters = [];
 const trail = [];
 const MAX_TRAIL = 24;
 
-function getSize() {
-  return {
-    w: window.innerWidth,
-    h: window.innerHeight
-  };
-}
-
 function resize() {
-  const { w, h } = getSize();
-  W = canvas.width = w;
-  H = canvas.height = h;
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
   cx = W / 2;
   cy = H / 2;
-  if (!mouseX) { mouseX = cx; mouseY = cy; }
+  mouseX = cx; mouseY = cy;
   buildScene();
 }
 
@@ -405,7 +372,6 @@ function draw() {
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, W, H);
 
-  // Stars
   stars.forEach(s => {
     s.x += s.dx; s.y += s.dy;
     if (s.x < 0) s.x = 1; if (s.x > 1) s.x = 0;
@@ -421,7 +387,6 @@ function draw() {
     ctx.fill();
   });
 
-  // Outer glow
   const og = ctx.createRadialGradient(cx, cy, irisRadius * 0.65, cx, cy, irisRadius * 1.45);
   og.addColorStop(0, 'rgba(74,240,196,0)');
   og.addColorStop(0.5, 'rgba(74,240,196,0.045)');
@@ -431,7 +396,6 @@ function draw() {
   ctx.fillStyle = og;
   ctx.fill();
 
-  // Iris base
   ctx.save();
   ctx.beginPath();
   ctx.arc(cx, cy, irisRadius, 0, Math.PI * 2);
@@ -445,7 +409,6 @@ function draw() {
   ctx.fillRect(cx - irisRadius, cy - irisRadius, irisRadius * 2, irisRadius * 2);
   ctx.restore();
 
-  // Rings
   irisRings.forEach(ring => {
     ring.phase += ring.rotSpeed;
     const seg = (Math.PI * 2) / ring.dashes;
@@ -460,7 +423,6 @@ function draw() {
     }
   });
 
-  // Fibers
   irisLines.forEach(ln => {
     ln.phase += 0.0025;
     const op = ln.op * (0.65 + 0.35 * Math.sin(ln.phase));
@@ -479,14 +441,12 @@ function draw() {
     ctx.stroke();
   });
 
-  // Limbal ring
   ctx.beginPath();
   ctx.arc(cx, cy, irisRadius, 0, Math.PI * 2);
   ctx.strokeStyle = 'rgba(74,240,196,0.2)';
   ctx.lineWidth = 1.2;
   ctx.stroke();
 
-  // Pupil
   const pg = ctx.createRadialGradient(cx, cy, 0, cx, cy, pupilRadius);
   pg.addColorStop(0, 'rgba(1,2,5,1)');
   pg.addColorStop(0.65, 'rgba(2,5,9,0.98)');
@@ -504,7 +464,6 @@ function draw() {
   ctx.fillStyle = ps;
   ctx.fill();
 
-  // Orbiters
   orbiters.forEach(p => {
     p.angle += p.speed;
     p.pulse += p.pulseSpeed;
@@ -534,7 +493,6 @@ function draw() {
     }
   });
 
-  // Trail
   for (let i = 1; i < trail.length; i++) {
     const t = i / trail.length;
     ctx.beginPath();
@@ -543,7 +501,6 @@ function draw() {
     ctx.fill();
   }
 
-  // Mouse glow
   const mdx = mouseX - cx, mdy = mouseY - cy;
   const mdist = Math.sqrt(mdx*mdx + mdy*mdy);
   if (mdist < irisRadius * 1.6) {
@@ -561,7 +518,6 @@ function draw() {
   requestAnimationFrame(draw);
 }
 
-// Input tracking
 document.addEventListener('mousemove', e => {
   mouseX = e.clientX; mouseY = e.clientY;
   trail.push({ x: e.clientX, y: e.clientY });
@@ -574,7 +530,6 @@ document.addEventListener('touchmove', e => {
   if (trail.length > MAX_TRAIL) trail.shift();
 }, { passive: true });
 
-// Form
 function handleSubmit() {
   const input = document.getElementById('emailInput');
   const email = input.value.trim();
@@ -597,16 +552,9 @@ function handleSubmit() {
 
 document.addEventListener('keydown', e => { if (e.key === 'Enter') handleSubmit(); });
 
-// Resize — delayed to let iOS settle
-window.addEventListener('resize', () => {
-  setTimeout(resize, 100);
-});
-
-// Init — double delay for iOS
-setTimeout(() => {
-  resize();
-  draw();
-}, 100);
+window.addEventListener('resize', resize);
+resize();
+draw();
 </script>
 
 </body>
